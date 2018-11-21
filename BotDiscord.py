@@ -9,8 +9,6 @@ BOT_PREFIX = "!"
 bot = commands.Bot(command_prefix=BOT_PREFIX)
 TOKEN = config['config']['token']
 
-print(TOKEN)
-
 client = discord.Client()
 
 list_who_play_yes = []
