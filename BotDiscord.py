@@ -34,9 +34,13 @@ async def on_message(message):
         help_reset = '!reset permet de remettre à zéro le vote, et vide la liste des copains qui ' \
                      'se sont enregistré'
         await client.send_message(message.channel, help_msg)
+        await client.send_message(message.channel, '-----')
         await client.send_message(message.channel, help_who_play)
+        await client.send_message(message.channel, '-----')
         await client.send_message(message.channel, help_list)
+        await client.send_message(message.channel, '-----')
         await client.send_message(message.channel, help_invocation)
+        await client.send_message(message.channel, '-----')
         await client.send_message(message.channel, help_reset)
 
     if message.content.startswith('ROCK AND STONES'):
@@ -141,7 +145,7 @@ async def on_message(message):
         affiche_list_yes = ""
         if len(list_who_play_yes) != 0:
             for x in list_who_play_yes:
-                affiche_list_yes += " {}".format(x.mention)
+                affiche_list_yes += " {};".format(x.mention)
             await client.send_message(message.channel, 'Allez les copains !! c\'est parti ! On joue !! 😍')
             await client.send_message(message.channel, affiche_list_yes)
 
@@ -152,13 +156,6 @@ async def on_message(message):
             msg_sure = await client.send_message(message.channel, msg_ask_sure)
             await client.add_reaction(msg_sure, reaction_check)
             await client.add_reaction(msg_sure, reaction_uncheck)
-
-'''@client.event
-async def on_reaction_add(reaction, user,):
-    channel = reaction.message.channel
-    if reaction.emoji == '':
-        await client.send_message(channel, '{} has added {} to the message: {}'.format(user.mention, reaction.emoji,                                                                                 reaction.message.content))
-'''
 
 
 @client.event
