@@ -1,10 +1,15 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import Bot
+import configparser
 
-BOT_PREFIX="!"
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+BOT_PREFIX = "!"
 bot = commands.Bot(command_prefix=BOT_PREFIX)
-TOKEN = 'NTEyNTUxMTEwODIxODA2MDkw.Ds8C5g.zp5IWS1aggsfQpI6mfJRK2rRGjc'
+TOKEN = config['config']['token']
+
+print(TOKEN)
 
 client = discord.Client()
 
@@ -22,13 +27,13 @@ async def on_message(message):
 
     if message.content.startswith('!help'):
         help_msg = 'Voici la liste des commandes utilisables pour ce bot :'
-        help_who_play = '-----!whoPlay permet de lancer un vote et ainsi de ' \
+        help_who_play = '!whoPlay permet de lancer un vote et ainsi de ' \
                         'savoir qui sera disponible pour jouer avec ' \
                         'les copains ce soir !'
-        help_list = '-----!list affiche les différent votant à la question de !whoPlay'
-        help_invocation = '-----!invocation permet de mentionner tout les votant qui ont répondu positivement ' \
+        help_list = '!list affiche les différent votant à la question de !whoPlay'
+        help_invocation = '!invocation permet de mentionner tout les votant qui ont répondu positivement ' \
                           'à la question de !whoPlay'
-        help_reset = '-----!reset permet de remettre à zéro le vote, et vide la liste des copains qui ' \
+        help_reset = '!reset permet de remettre à zéro le vote, et vide la liste des copains qui ' \
                      'se sont enregistré'
         await client.send_message(message.channel, help_msg)
         await client.send_message(message.channel, help_who_play)
@@ -143,9 +148,12 @@ async def on_message(message):
             await client.send_message(message.channel, affiche_list_yes)
 
     if message.content.startswith('!reset'):
-        msg_sure = await client.send_message(message.channel, msg_ask_sure)
-        await client.add_reaction(msg_sure, reaction_check)
-        await client.add_reaction(msg_sure, reaction_uncheck)
+        if len(list_who_play_yes) == 0 and len(list_who_play_no) == 0:
+            await client.send_message(message.channel, "La liste est déjà vide.")
+        else:
+            msg_sure = await client.send_message(message.channel, msg_ask_sure)
+            await client.add_reaction(msg_sure, reaction_check)
+            await client.add_reaction(msg_sure, reaction_uncheck)
 
 '''@client.event
 async def on_reaction_add(reaction, user,):
