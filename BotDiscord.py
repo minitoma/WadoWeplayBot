@@ -16,7 +16,7 @@ list_who_play_no = []
 msg_ask_sure = "⚠ Tu es vraiment sûr de vouloir reset le vote maintenant ? ⚠"
 reaction_check = '✅'
 reaction_uncheck = '❌'
-
+version = 1.1
 
 @client.event
 async def on_message(message):
@@ -25,23 +25,25 @@ async def on_message(message):
 
     if message.content.startswith('!help'):
         help_msg = 'Voici la liste des commandes utilisables pour ce bot :'
-        help_who_play = '!whoPlay permet de lancer un vote et ainsi de ' \
+        help_who_play = 'Permet de lancer un vote et ainsi de ' \
                         'savoir qui sera disponible pour jouer avec ' \
                         'les copains ce soir !'
-        help_list = '!list affiche les différent votant à la question de !whoPlay'
-        help_invocation = '!invocation permet de mentionner tout les votant qui ont répondu positivement ' \
+        help_list = 'Affiche les différents votants à la question de !whoPlay'
+        help_invocation = 'Permet de mentionner tout les votants qui ont répondu positivement ' \
                           'à la question de !whoPlay'
-        help_reset = '!reset permet de remettre à zéro le vote, et vide la liste des copains qui ' \
-                     'se sont enregistré'
-        await client.send_message(message.channel, help_msg)
-        await client.send_message(message.channel, '-----')
-        await client.send_message(message.channel, help_who_play)
-        await client.send_message(message.channel, '-----')
-        await client.send_message(message.channel, help_list)
-        await client.send_message(message.channel, '-----')
-        await client.send_message(message.channel, help_invocation)
-        await client.send_message(message.channel, '-----')
-        await client.send_message(message.channel, help_reset)
+        help_reset = 'Permet de remettre à zéro le vote, et vide la liste des copains qui ' \
+                     'se sont enregistrés'
+       
+        minitoma = message.server.get_member_named('Minitoma')
+
+        embed = discord.Embed(title=" -- WadoWeplay - Version {} --".format(version), description=help_msg,
+                              author=minitoma.name, color=0x992d22)
+        embed.add_field(name="!whoPlay", value=help_who_play, inline=False)
+        embed.add_field(name="!list", value=help_list, inline=True)
+        embed.add_field(name="!invocation", value=help_invocation, inline=True)
+        embed.add_field(name="!reset", value=help_reset, inline=True)
+        embed.set_footer(text="Développé et édité par {} - 22/11/2018".format(minitoma.name))
+        await client.send_message(message.channel, embed=embed)
 
     if message.content.startswith('ROCK AND STONES'):
         drg = 'TO THE BONES !!'
