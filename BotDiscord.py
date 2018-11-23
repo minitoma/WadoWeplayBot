@@ -13,10 +13,11 @@ client = discord.Client()
 
 list_who_play_yes = []
 list_who_play_no = []
+dict_games = {}
 msg_ask_sure = "⚠ Tu es vraiment sûr de vouloir reset le vote maintenant ? ⚠"
 reaction_check = '✅'
 reaction_uncheck = '❌'
-version = 1.1
+version = 1.2
 
 @client.event
 async def on_message(message):
@@ -33,7 +34,7 @@ async def on_message(message):
                           'à la question de !whoPlay'
         help_reset = 'Permet de remettre à zéro le vote, et vide la liste des copains qui ' \
                      'se sont enregistrés'
-       
+
         minitoma = message.server.get_member_named('Minitoma')
 
         embed = discord.Embed(title=" -- WadoWeplay - Version {} --".format(version), description=help_msg,
@@ -158,6 +159,37 @@ async def on_message(message):
             msg_sure = await client.send_message(message.channel, msg_ask_sure)
             await client.add_reaction(msg_sure, reaction_check)
             await client.add_reaction(msg_sure, reaction_uncheck)
+
+    if message.content.startswith('!setGames'):
+        await client.send_message(message.channel, "Liste les jeux auxquels tu as envie de jouer en ce moment "
+                                                   "avec les copains ! Pour ça, il suffit de répondre à ce "
+                                                   "message sous "
+                                                   "la forme : Don't Starve Together; Overwatch; Armello")
+        str_games = await client.wait_for_message(author=message.author)
+        print(str_games.content)
+        list_games = str_games.content.split("; ")
+        print(list_games)
+        dict_games[message.author.name] = list_games
+        print(dict_games)
+
+    if message.content.startswith('!getGames'):
+        await client.send_message(message.channel, "Indique le pseudo d'un copain pour voir sa liste de souhait. "
+                                                   "Pour afficher tous les copains il te suffit d'écrire : all ")
+        cop_games = await client.wait_for_message(author=message.author)
+        name = cop_games.content
+        if name in dict_games:
+            affiche_list_gs = ""
+            for gs in dict_games[name]:
+                affiche_list_gs += " {};".format(gs)
+            await client.send_message(message.channel, "{} souhaite jouer à :{}".format(name, affiche_list_gs))
+        elif name == "all":
+            for x in dict_games:
+                affiche_list_g = ""
+                for g in dict_games[x]:
+                    affiche_list_g += " {};".format(g)
+                await client.send_message(message.channel, "{} souhaite jouer à :{}".format(x, affiche_list_g))
+        else:
+            await client.send_message(message.channel, name+" n'a pas encore défini sa liste")
 
 
 @client.event
